@@ -23,4 +23,9 @@ end
    get '/register'
    assert_response :success 
  end
+
+ test "that /profilename route opens the user profile."do 
+ get '/uprabhakar'
+ assert_response :success
+end
 end
