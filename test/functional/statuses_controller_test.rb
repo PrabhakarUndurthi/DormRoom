@@ -40,11 +40,39 @@ end
   test "should create status when logged in." do
     sign_in users(:prabhakar)
     assert_difference('Status.count') do
-      post :create, status: { content: @status.content }
+      post :create, status: { content: @status.content , user_id: users(:michel).id}
     end
 
     assert_redirected_to status_path(assigns(:status))
+    assert_equal assigns(:status).user_id, users(:prabhakar).id
   end
+
+
+  test "should create status for the current user when logged in"do 
+    sign_in users(:prabhakar)
+    assert_difference('Status.count')do 
+      post :create, status: {content: @status.content}
+    end
+    assert_redirected_to status_path(assigns(:status))
+end
+
+
+ test "should update status for the current user when logged in"do 
+    sign_in users(:prabhakar)
+   put :update, id: @status, status: {content: @status.content, user_id: users(:michel).id}
+   assert_redirected_to status_path(assigns(:status))
+   assert_equal assigns(:status).user_id, users(:prabhakar).id 
+end
+
+test "should not update the status, if the status has no content."do 
+  sign_in users(:prabhakar)
+  put :update, id: @status 
+  assert_redirected_to status_path(assigns(:status))
+  assert_equal assigns(:status).user_id, users(:prabhakar).id
+end
+
+
+
 
   test "should show status" do
     get :show, id: @status

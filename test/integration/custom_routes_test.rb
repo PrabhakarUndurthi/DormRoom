@@ -24,6 +24,8 @@ end
    assert_response :success 
  end
 
+
+# Make sure the profile page  of a user displayed correctly.
  test "that /profilename route opens the user profile."do 
  get '/uprabhakar'
  assert_response :success
