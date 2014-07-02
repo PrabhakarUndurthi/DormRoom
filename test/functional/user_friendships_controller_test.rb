@@ -29,7 +29,27 @@ class UserFriendshipsControllerTest < ActionController::TestCase
        get :new, friend_id: users(:michel).id 
        assert_match /#{users(:michel).full_name}/, response.body
      end
+
+     should "assign a new user friendship to the correct friend"do 
+       get :new, friend_id: users(:michel).id 
+       assert_equal users(:michel), assigns(:user_friendship).friend
+     end
+
+     should "assign a new user friendship to the currently logged in user "do 
+       get :new, friend_id: users(:michel).id 
+       assert_equal users(:prabhakar), assigns(:user_friendship).user
+     end
+
+     should " return 404 status if no friend is found."do 
+       get :new, friend_id: 'invalid'
+       assert_response :not_found
+   end
+
+   should "ask if you really want to friend the user"do 
+    get :new, friend_id: users(:michel)
+    assert_match /Do you really want to  be friend with #{users(:michel).full_name}?/, response.body 
    end
   end
+end
 end
 
