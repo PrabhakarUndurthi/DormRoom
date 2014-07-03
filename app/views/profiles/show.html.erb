@@ -1,5 +1,8 @@
 <div class="page-header">
 	<h1><%= @user.full_name %></h1>
+	<div class="friend">
+	<%= link_to "Add Friend", new_user_friendship_path(friend_id: @user) , class: "btn btn-primary" %>
+  </div>
 </div>
 
  <% if @statuses %>
