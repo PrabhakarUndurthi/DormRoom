@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class UserFriendshipsControllerTest < ActionController::TestCase
+
+  # If the user is curretnly not logged in, then redirect to the login page.
   context "#new"do 
     context "when not logged in"do 
       should "redirect to the login page"do
@@ -9,6 +11,8 @@ class UserFriendshipsControllerTest < ActionController::TestCase
     end
   end
 
+
+# If the user is logged in correctly then flash a success message
    context "when logged in"do 
      setup do 
     	sign_in users(:prabhakar)	
@@ -44,6 +48,8 @@ class UserFriendshipsControllerTest < ActionController::TestCase
        get :new, friend_id: 'invalid'
        assert_response :not_found
    end
+
+   # after clicking on the add friend, make sure the user clicked the button correctly.
 
    should "ask if you really want to friend the user"do 
     get :new, friend_id: users(:michel)
@@ -86,6 +92,10 @@ end
       assert_redirected_to root_path
      end
     end
+
+    # when the user has a valid friend id assign a  new user as a friend.
+    # and create the friend relation between the two users.
+    # after creating the friendship redirect to the profle page of the new friend.
 
   context "with a valid friend object"do 
     setup do 
