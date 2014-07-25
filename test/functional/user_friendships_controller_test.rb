@@ -2,6 +2,41 @@ require 'test_helper'
 
 class UserFriendshipsControllerTest < ActionController::TestCase
 
+  context "#index" do 
+    context "when not logged in" do 
+      should "redirect to the login page" do 
+        get :index 
+        assert_response :redirect
+      end
+    end
+
+    context "when logged in" do 
+     setup do 
+      @friendship1 = create(:pending_user_friendship, user: users(:prabhakar), friend: create(:user, first_name: 'Pending', last_name: 'Friend'))
+      @friendship2 = create(:accepted_user_friendship, user: users(:prabhakar), friend: create(:user, first_name: 'Active', last_name: 'Friend'))
+        
+        sign_in users(:prabhakar)
+     get :index 
+     end
+
+     should "get the index page without error" do 
+      assert_response :success
+     end
+
+     should "assign user_friendships" do 
+       assert assigns(:user_friendships)
+     end
+
+     should "display the user friend's name" do 
+      assert_match 'Pending',response.body
+      assert_match /Active/, response.body
+     end
+
+    end
+  end
+end
+
+
   # If the user is curretnly not logged in, then redirect to the login page.
   context "#new"do 
     context "when not logged in"do 
@@ -114,7 +149,7 @@ end
   end
 
     should "create a friendship" do 
-      assert users(:prabhakar).friends.include?(users(:brad))
+      assert users(:prabhakar).pending_friends.include?(users(:brad))
     end
 
     should "redirect to the profile page of the friend"do 
@@ -129,6 +164,6 @@ end
     end
    end
   end
-end
+  
 
 
