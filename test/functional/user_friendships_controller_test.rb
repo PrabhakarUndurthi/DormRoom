@@ -59,6 +59,36 @@ class UserFriendshipsControllerTest < ActionController::TestCase
   end
 
 
+  # make sure the mutual frienship i s created between the two friends.
+
+  context "#accept mutual_friendship!" do 
+    setup do 
+      UserFriendship.request users(:prabhakar), friend(:michel)
+  end
+
+  should "accept  the mutual friendship!" do 
+    friendship1 = users(:prabhakar).user_friendship.where(friend_id: users(:michel).id).first
+    friendship2 = users(:michel).user_friendship.where(friend_id: users(:prabhakar).id).frist
+    friendship1.accept_mutual_friendship!
+    friendship2.reload 
+
+    assert_equal "accepted",  friendship.state 
+  end
+end
+
+context "#mutual friendship! "
+  setup do 
+    UserFriendship.request users(:prabhakar), users(:michel)
+    friendship1 = users(:prabhakar).user_friendship.where(friend_id: users(:michel).id).first
+    friendship2 =  users(:michel).user_friendship.where(friend_id: users(:prabhakar).id).first 
+  end
+
+  should " correctly find the mutual friendship" do 
+    assert_equal  @friendship2, @friendship1.mutual_friendship
+  end
+end
+
+
 # If the user is logged in correctly then flash a success message
    context "when logged in"do 
      setup do 
@@ -171,13 +201,70 @@ end
 
    should "set the flash success message"do 
      assert flash[:success]
-     assert_equal "You are now friends with #{users(:brad).full_name}", flash[:success]
+     assert_equal "Friend request sent.", flash[:success]
      end
     end
    end
   end
-end
-end
 
+   context "#accept" do 
+    context "when not logged in " do 
+      should "rediect to the login page"
+       put :accept, id: 1
+       assert_response :redirect 
+       assert_redirected_to login_path 
+      end
+    end
+
+    context "when logged in " do 
+      setup do 
+        @user_friendship =create(:pending_user_friendship, user: users(:prabhakar))
+        sign_in users(:prabhakar)
+        put :accept, id: @user_friendship
+        @user_friendship.reload
+      end
+      should "assign a user_friendship" do 
+       assert assigns(:user_friendship)
+       assert_equal @user_friendship, assigns(:user_friendship)
+      end
+
+      should "update the state to accepted" do 
+        assert_equal 'accepted', @user_friendship.state
+      end
+
+      should "have a flash success message" do 
+        assert_equal "You are now friends with #{@user_friendship.friend.first_name}", flash[:success]
+      end
+    end
+
+  end
+
+  context "#edit" do
+    context "when not logged in " do 
+      should "redirect to the login page" do 
+        get :edit, id:
+        assert_response :redirect
+      end
+      end
+
+      context"when logged in " do 
+        setup do 
+          @user_friendship = create(:pending_user_friendship, user: users(:prabhakar))
+          sign_in users(:prabhakar) 
+          get :edit , id: @user_friendship
+        end
+
+        should "get edit and return success" do 
+          assert_response :success
+        end
+
+         should "assign to the user friendship" do 
+           assert assigns(:user_friendship)
+         end
+        end
+    end
+    end
+  end
+end
 
 

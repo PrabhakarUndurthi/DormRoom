@@ -63,7 +63,7 @@ class UserFriendshipTest < ActiveSupport::TestCase
     end
   end
 
-  context "resquest " do 
+  context "request " do 
     should "create two user friendships" do 
       assert_difference "UserFriendship.count", 2 do 
         UserFriendship.request(users(:prabhakar), users(:michel))
@@ -76,4 +76,33 @@ class UserFriendshipTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#delete the mutual_friendship"
+  setup do 
+    UserFriendship.request users(:prabhakar), users(:michel)
+
+    @friendship1 = users(:prabhakar).user_friendship.where(friend_id: users(:michel).id).first 
+    @friendship2 = users(:michel). user_friendship.where(friend_id: users(:prabhakar).id).first   
+  end
+
+   should "delete the mutual friendship between the two users." do 
+    assert_equal @friendship2, @friendship1.mutual_friendship
+    @friendship1.delete_mutual_friendship!
+    assert !UserFriendship.exists?(@friendship2.id)
+   end
+
+end
+
+ context "on destroy" do 
+  setup do 
+    UserFriendship.request users(:prabhakar), users(:michel)
+    @friendship1 = users(:prabhakar).user_friendship.where(friend_id: users(:michel).id).first
+    @friendship2 = users(:mcihel).user_friendship.where(:friend_id: users(:prabhakar).id).first 
+  end
+
+   should "should destroy the mutual friendship also" do 
+    @friendship1.destroy 
+     assert !UserFriendship.exists?(@friendship2.id)
+   end
+ end
 end
