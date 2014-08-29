@@ -32,7 +32,7 @@ class UserFriendshipsController < ApplicationController
  	render file: 'public/404', status: :not_found
   end
 
-  # If the friend is has key and contains user_friendship relation
+  # If the friend id has key and contains user_friendship relation
   # then create a friendship
   # Once the friendhip is created flash the success message
   # if the friendhip is not created redirect the user to the root path of the website.
@@ -55,6 +55,7 @@ class UserFriendshipsController < ApplicationController
 
   def edit
     @user_friendship = current_user.user_friendships.find(params[:id])
+    @friend = @user_friendship.friend
   end
 
 end

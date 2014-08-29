@@ -239,6 +239,7 @@ end
 
   end
 
+
   context "#edit" do
     context "when not logged in " do 
       should "redirect to the login page" do 
@@ -260,6 +261,9 @@ end
 
          should "assign to the user friendship" do 
            assert assigns(:user_friendship)
+         end
+         should "assign to friend" do 
+          assert assigns(:friend)
          end
         end
     end
