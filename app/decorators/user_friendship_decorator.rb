@@ -1,5 +1,5 @@
 class UserFriendshipDecorator < Draper::Decorator
-  #delegate_all
+  delegate_all
 
   decorates :user_friendship
 
@@ -12,11 +12,12 @@ end
 def sub_message
 	case model.state
 	when 'pending'
-	  "<h3> Do you really want to be friends with #{model.friend.first_name}?</h3>"
+	  "Friend request pending."
 	when 'accepted'
 	  "<h3> You're now friends with #{model.friend.first_name}</h3>"  
 	end
 end
+
   # Define presentation-specific methods here. Helpers are accessed through
   # `helpers` (aka `h`). You can override attributes, for example:
   #

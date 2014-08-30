@@ -11,6 +11,7 @@ gem 'simple_form'
 gem 'state_machine' 
 gem 'factory_girl_rails'
 gem  'draper'
+gem 'js-routes'
 
 group :test do 
 	gem 'shoulda'
