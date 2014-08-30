@@ -43,9 +43,16 @@ class UserFriendship < ActiveRecord::Base
 
  end
 
+ def mutual_friendship
+ 	 self.class.where({user_id: friend_id, friend_id: user_id}).first
+ end
+
  def accept_mutual_friendship!
- 	mutual_friendship = self.class.where({user_id: friend_id, friend_id: user_id}).friend_requested
- 	mutual_friendship.update_attribute(:state, 'accepted')
+ 	# Grab the  mutual friendship and update the friendship 
+ 	# to be accepte without using the state machine 
+ 	# so as not to invoke callbacks.
+ 	
+ 	mutual_friendship.update_attributes(:state,   'accepted')
  end
 
  def delete_mutual_friendship!

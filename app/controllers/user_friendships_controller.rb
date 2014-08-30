@@ -8,7 +8,7 @@ class UserFriendshipsController < ApplicationController
   def accept
     @user_friendship = current_user.user_friendship.find(param[:id])
     if @user_friendship.accept!
-      flash[:success] = "You are now friends with #{@user_friendship.friend.first_name}"
+      flash[:success] = "You're now friends with #{@user_friendship.friend.first_name}"
     else
       flash[:error] = "That friendship could not be accepted"
     end
@@ -25,9 +25,9 @@ class UserFriendshipsController < ApplicationController
  		raise ActiveRecord::RecordNotFound if @friend.nil?
  		@user_friendship = current_user.user_friendships.new(friend: @friend)
  	else
-
  		flash[:error] = "Friend required"
  	end
+
  rescue ActiveRecord::RecordNotFound
  	render file: 'public/404', status: :not_found
   end
@@ -53,9 +53,19 @@ class UserFriendshipsController < ApplicationController
   	 end
   end
 
+
+
   def edit
-    @user_friendship = current_user.user_friendships.find(params[:id])
+    @user_friendship = current_user.user_friendships.find(params[:id]).decorate
     @friend = @user_friendship.friend
   end
 
+
+  def destroy
+    @user_friendship = current_user.user_friendships.find(params[:id])
+    if @user_friendship.destroy
+      flash[:success] = "Friendship destroyed"
+    end
+    redirect_to user_friendships_path
+  end
 end
