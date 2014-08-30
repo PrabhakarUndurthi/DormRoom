@@ -40,8 +40,9 @@ class UserFriendship < ActiveRecord::Base
 
  def send_acceptence_email
  	UserNotifier.friend_request_accepted(id).deliver
-
  end
+
+
 
  def mutual_friendship
  	 self.class.where({user_id: friend_id, friend_id: user_id}).first
@@ -52,7 +53,7 @@ class UserFriendship < ActiveRecord::Base
  	# to be accepte without using the state machine 
  	# so as not to invoke callbacks.
  	
- 	mutual_friendship.update_attributes(:state,   'accepted')
+ 	mutual_friendship.update_attributes(:state,'accepted')
  end
 
  def delete_mutual_friendship!
